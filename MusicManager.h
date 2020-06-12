@@ -2,9 +2,9 @@
 // Created by Dor on 10/06/2020.
 //
 #include <ostream>
+#include "Artist.h"
 #include "hashTable.h"
-#include "Rank_tree.h"
-
+#include "AVL_types.h"
 
 #ifndef EX2_HASH_MUSICMANAGER_H
 #define EX2_HASH_MUSICMANAGER_H
@@ -18,266 +18,80 @@
  *
  */
 
-
+namespace AVL {
 
     using namespace AVLUtils;
 
-    class ArtistRegularTreeInfo {
+    class MusicManager {
+
     public:
-        ArtistRegularTreeInfo(int songId) : songId(songId) {}
-
-        virtual ~ArtistRegularTreeInfo() {
-
-        }
-        int getSongId() const {
-            return songId;
+        const HashTable <Artist> &getArrayOfArtists() const {
+            return array_of_artists;
         }
 
-        void setSongId(int songId) {
-            ArtistRegularTreeInfo::songId = songId;
+
+        AVL_tree <MainTreeSongInfo> &getMainSongsTree()  {
+            return main_songs_tree;
         }
 
-        ArtistRegularTreeInfo& operator=(const ArtistRegularTreeInfo& rhs);
-
-        bool operator==(const ArtistRegularTreeInfo &rhs) const {
-            return songId == rhs.songId;
-        }
-
-        bool operator!=(const ArtistRegularTreeInfo &rhs) const {
-            return !(rhs == *this);
-        }
-
-        bool operator<(const ArtistRegularTreeInfo &rhs) const {
-            return songId < rhs.songId;
-        }
-
-        bool operator>(const ArtistRegularTreeInfo &rhs) const {
-            return rhs < *this;
-        }
-
-        bool operator<=(const ArtistRegularTreeInfo &rhs) const {
-            return !(rhs < *this);
-        }
-
-        bool operator>=(const ArtistRegularTreeInfo &rhs) const {
-            return !(*this < rhs);
-        }
-        friend std::ostream &operator<<(std::ostream &os, const ArtistRegularTreeInfo &info) {
-            os << "songId: " << info.songId;
-            return os;
-        }
-
+        StatusType AddArtist(int artistId);
+        StatusType RemoveArtist(int artistID);
+        StatusType AddSong(int artistID,int songID);
+        StatusType  RemoveSong(int artistID,int songID);
     private:
-        int songId;
+        HashTable<Artist> array_of_artists;
+        AVL_tree<MainTreeSongInfo> main_songs_tree;
     };
 
-ArtistRegularTreeInfo &ArtistRegularTreeInfo::operator=(const ArtistRegularTreeInfo &rhs) {
-    this->songId=rhs.getSongId();
-    return *this;
+    StatusType MusicManager::AddArtist(int artistId) {
+        return (this->array_of_artists.addToTable(artistId));
+    }
+
+    StatusType MusicManager::RemoveArtist(int artistID) {
+        Link_Node<Artist> *NodeToRemove=this->array_of_artists.retrieve_member(artistID);
+        if (NodeToRemove==NULL || NodeToRemove->getElement()->getMostStreamsSong()!=NULL){
+            return FAILURE;
+        }
+        return this->array_of_artists.removeFromTable(artistID);
+    }
+
+    StatusType MusicManager::AddSong(int artistID, int songID) {
+        Link_Node<Artist> *NodeToAddSong=this->array_of_artists.retrieve_member(artistID);
+        if (NodeToAddSong==NULL ){
+            return FAILURE;
+        }
+        ArtistRegularTreeInfo dummy_key = ArtistRegularTreeInfo(songID);
+        if(NodeToAddSong->getElement()->getRegularTree().find_node(&dummy_key) !=NULL){
+            return FAILURE; ///there is a song with the given singID to the current artist
+        }
+        NodeToAddSong->getElement()->addSong(songID); //adding the song to the artist
+        MainTreeSongInfo* new_node_key= new MainTreeSongInfo(artistID,songID); //adding the song to the main_songs_tree
+        AVL_tree_node<MainTreeSongInfo>* new_node = new AVL_tree_node<MainTreeSongInfo>(new_node_key);
+        this->getMainSongsTree().insert(*new_node);
+        return SUCCESS;
+    }
+
+    StatusType MusicManager::RemoveSong(int artistID, int songID) {
+        Link_Node<Artist> *NodeToRemoveSong=this->array_of_artists.retrieve_member(artistID);
+        if (NodeToRemoveSong==NULL ){
+            return FAILURE;
+        }
+        ArtistRegularTreeInfo dummy_key = ArtistRegularTreeInfo(songID);
+        if(NodeToRemoveSong->getElement()->getRegularTree().find_node(&dummy_key) ==NULL){
+            return FAILURE; ///there is a song with the given singID to the current artist
+        }
+        NodeToRemoveSong->getElement()->removeSong(songID); //removing the song to the artist
+        MainTreeSongInfo new_node_key= MainTreeSongInfo(artistID,songID); //adding the song to the main_songs_tree
+        AVL_tree_node<MainTreeSongInfo> new_node = AVL_tree_node<MainTreeSongInfo>(&new_node_key);
+        this->getMainSongsTree().remove(new_node);
+
+        return SUCCESS;
+    }
+
+
 }
 
-class ArtistStreamTreeInfo{
-public:
-    ArtistStreamTreeInfo(int songId) : numOfStreams(0), songId(songId) {}
 
-    int getNumOfStreams() const {
-        return numOfStreams;
-    }
-
-    bool operator==(const ArtistStreamTreeInfo &rhs) const {
-        return songId == rhs.songId;
-    }
-
-    bool operator<(const ArtistStreamTreeInfo &rhs) const {
-        if(numOfStreams==rhs.numOfStreams){
-            return this->songId > rhs.songId;
-        }
-        return numOfStreams < rhs.numOfStreams;
-    }
-
-    friend std::ostream &operator<<(std::ostream &os, const ArtistStreamTreeInfo &info) {
-        os << "numOfStreams: " << info.numOfStreams << " songId: " << info.songId;
-        return os;
-    }
-
-    bool operator>(const ArtistStreamTreeInfo &rhs) const {
-        return rhs < *this;
-    }
-
-    bool operator<=(const ArtistStreamTreeInfo &rhs) const {
-        return !(rhs < *this);
-    }
-
-    bool operator>=(const ArtistStreamTreeInfo &rhs) const {
-        return !(*this < rhs);
-    }
-
-    bool operator!=(const ArtistStreamTreeInfo &rhs) const {
-        return !(rhs == *this);
-    }
-
-    void setNumOfStreams(int numOfStreams) {
-        ArtistStreamTreeInfo::numOfStreams = numOfStreams;
-    }
-
-    int getSongId() const {
-        return songId;
-    }
-
-    void setSongId(int songId) {
-        ArtistStreamTreeInfo::songId = songId;
-    }
-
-    void incrementNumberOfStreams(int count){
-        this->setNumOfStreams(numOfStreams + count);
-    }
-
-private:
-    int numOfStreams;
-    int songId;
-};
-
-
-class MainTreeSongInfo{
-
-public:
-
-    MainTreeSongInfo(int artistId, int songId) : songId(songId), artistId(artistId),numOfStreams(0) {}
-
-
-    int getNumOfStreams() const {
-        return numOfStreams;
-    }
-
-    void setNumOfStreams(int numOfStreams) {
-        MainTreeSongInfo::numOfStreams = numOfStreams;
-    }
-
-    int getSongId() const {
-        return songId;
-    }
-
-    void setSongId(int songId) {
-        MainTreeSongInfo::songId = songId;
-    }
-
-    int getArtistId() const {
-        return artistId;
-    }
-
-    void setArtistId(int artistId) {
-        MainTreeSongInfo::artistId = artistId;
-    }
-
-
-
-    bool operator==(const MainTreeSongInfo &rhs) const {
-        return numOfStreams == rhs.numOfStreams &&
-               songId == rhs.songId &&
-               artistId == rhs.artistId;
-    }
-
-    bool operator!=(const MainTreeSongInfo &rhs) const {
-        return !(rhs == *this);
-    }
-
-    bool operator<(const MainTreeSongInfo &rhs) const {
-        if (numOfStreams < rhs.numOfStreams)
-            return true;
-        if (numOfStreams>rhs.numOfStreams){
-            return false;
-        }
-
-        if (artistId > rhs.artistId)
-            return true;
-        if (artistId < rhs.artistId)
-            return false;
-
-        if (songId > rhs.songId){
-            return true;
-        }
-        return false;
-    }
-
-    bool operator>(const MainTreeSongInfo &rhs) const {
-        return rhs < *this;
-    }
-
-    bool operator<=(const MainTreeSongInfo &rhs) const {
-        return !(rhs < *this);
-    }
-
-    bool operator>=(const MainTreeSongInfo &rhs) const {
-        return !(*this < rhs);
-    }
-
-    friend std::ostream &operator<<(std::ostream &os, const MainTreeSongInfo &info) {
-        os << "numOfStreams: " << info.numOfStreams << " songId: " << info.songId << " artistId: " << info.artistId;
-        return os;
-    }
-
-private:
-    int numOfStreams;
-    int songId;
-    int artistId;
-
-
-};
-
-
-class Artist{
-
-public:
-
-    AVL::AVL_tree_node<ArtistStreamTreeInfo> *getMostStreamsSong() const {
-        return most_streams_song;
-    }
-
-    void updateMostStreamsSong() {
-        most_streams_song = this->stream_tree.retrieveMax();
-    }
-
-    Artist(): most_streams_song(NULL) {
-    }
-
-    StatusType addSong(int song_id);
-
-    StatusType removeSong(int song_id);
-
-private:
-    AVL::AVL_tree<ArtistRegularTreeInfo> regular_tree;
-    AVL::AVL_tree<ArtistStreamTreeInfo> stream_tree;
-    AVL::AVL_tree_node<ArtistStreamTreeInfo>* most_streams_song;
-
-};
-
-StatusType Artist::addSong(int song_id) {
-    ArtistRegularTreeInfo* regular_key= new ArtistRegularTreeInfo(song_id);
-    if (regular_tree.find_node(regular_key)!=NULL){
-        delete regular_key;
-        return FAILURE;
-    }
-    AVL::AVL_tree_node<ArtistRegularTreeInfo>* regular_node=  new AVL::AVL_tree_node<ArtistRegularTreeInfo>(regular_key);
-    regular_tree.insert(*regular_node);
-    ArtistStreamTreeInfo* stream_key= new ArtistStreamTreeInfo(song_id);
-    AVL::AVL_tree_node<ArtistStreamTreeInfo>* stream_node=  new AVL::AVL_tree_node<ArtistStreamTreeInfo>(stream_key);
-    stream_tree.insert(*stream_node);
-    this->updateMostStreamsSong();
-    return SUCCESS;
-}
-
-StatusType Artist::removeSong(int song_id) {
-    ArtistRegularTreeInfo dummy_regular_key= ArtistRegularTreeInfo(song_id);
-    AVL::AVL_tree_node<ArtistRegularTreeInfo> dummy_regular_node =  AVL::AVL_tree_node<ArtistRegularTreeInfo>(&dummy_regular_key);
-    if(this->regular_tree.remove(dummy_regular_node)==FAILURE){
-        return FAILURE;
-    }
-    ArtistStreamTreeInfo dummy_stream_key=  ArtistStreamTreeInfo(song_id);
-    AVL::AVL_tree_node<ArtistStreamTreeInfo> dummy_stream_node =  AVL::AVL_tree_node<ArtistStreamTreeInfo>(&dummy_stream_key);
-    stream_tree.remove(dummy_stream_node);
-    this->updateMostStreamsSong();
-    return SUCCESS;
-}
 
 
 #endif //EX2_HASH_MUSICMANAGER_H

@@ -14,7 +14,9 @@ namespace AVL {
     template<class T>
     class Link_Node {
     public:
-        Link_Node(int num) : num(num),next(NULL),prev(NULL) {}
+        Link_Node(int num) : num(num), next(NULL),prev(NULL) {
+            this->element=new T();
+        }
 
         Link_Node(int num, T *element) :
         num(num), element(element),next(NULL),prev(NULL) {}
@@ -39,7 +41,7 @@ namespace AVL {
             Link_Node::prev = prev;
         }
 
-        T* getElement() const {
+        T* getElement()  {
             return element;
         }
 

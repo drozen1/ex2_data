@@ -35,7 +35,7 @@ namespace AVL {
 
 
 
-        HashTable(int sizeOfArray) : size_of_array(sizeOfArray),num_of_members(0) {
+        HashTable(int sizeOfArray=2) : size_of_array(sizeOfArray),num_of_members(0) {
             table= new Doubly_Linked_List<T>*[size_of_array];
             for (int i = 0; i <sizeOfArray ; ++i) {
                 table[i]= new Doubly_Linked_List<T>();
@@ -158,7 +158,7 @@ namespace AVL {
     template<class T>
     StatusType HashTable<T>::removeFromTable(int member_id) {
         Link_Node<T>* NodeToRemove = retrieve_member(member_id);
-        if (!NodeToRemove){
+        if (!NodeToRemove ){
             return FAILURE;
         }
         else{
@@ -168,7 +168,6 @@ namespace AVL {
             reHash();
             return SUCCESS;
         }
-
     }
 
 }

@@ -6,30 +6,59 @@
 #include "hashTable.h"
 #include "AVL_tree_node.h"
 #include "MusicManager.h"
+#include "Artist.h"
+#include "library2.h"
 ///
 int main() {
+
+    AVL::MusicManager* m = new AVL::MusicManager();
+    m->AddArtist(123);
+    m->AddSong(123,1);
+    m->RemoveSong(123,1);
+
+
     int p1=1;
-    int p2=2;
     int p3=3;
-    int p4=4;
     int p5=5;
-    int p6=6;
+    int p7=7;
+    int p9=9;
+    int p11=11;
+    int p13=13;
+    int p15=15;
+    int p17=17;
+    int p19=19;
+    int p21=21;
+    int p23=23;
 
     AVL::AVL_tree<int>* tree= new AVL::AVL_tree<int>();
-    AVL::AVL_tree_node<int> q1=  AVL::AVL_tree_node<int>(&p1);
-    AVL::AVL_tree_node<int> q2=  AVL::AVL_tree_node<int>(&p2);
+    AVL::AVL_tree_node<int> q9=  AVL::AVL_tree_node<int>(&p9);
     AVL::AVL_tree_node<int> q3=  AVL::AVL_tree_node<int>(&p3);
-    AVL::AVL_tree_node<int> q4=  AVL::AVL_tree_node<int>(&p4);
+    AVL::AVL_tree_node<int> q15=  AVL::AVL_tree_node<int>(&p15);
+    AVL::AVL_tree_node<int> q1=  AVL::AVL_tree_node<int>(&p1);
+    AVL::AVL_tree_node<int> q7=  AVL::AVL_tree_node<int>(&p7);
+    AVL::AVL_tree_node<int> q13=  AVL::AVL_tree_node<int>(&p13);
+    AVL::AVL_tree_node<int> q19=  AVL::AVL_tree_node<int>(&p19);
     AVL::AVL_tree_node<int> q5=  AVL::AVL_tree_node<int>(&p5);
-    AVL::AVL_tree_node<int> q6=  AVL::AVL_tree_node<int>(&p6);
+    AVL::AVL_tree_node<int> q11=  AVL::AVL_tree_node<int>(&p11);
+    AVL::AVL_tree_node<int> q17=  AVL::AVL_tree_node<int>(&p17);
+    AVL::AVL_tree_node<int> q21=  AVL::AVL_tree_node<int>(&p21);
+    AVL::AVL_tree_node<int> q23=  AVL::AVL_tree_node<int>(&p23);
 
 
-    tree->insert(q3);//////////////prob
-    tree->insert(q2);
-    tree->insert(q4);
+    tree->insert(q9);
+    tree->insert(q3);
+    tree->insert(q15);
     tree->insert(q1);
+    tree->insert(q7);
+    tree->insert(q13);
+    tree->insert(q19);
     tree->insert(q5);
-    tree->remove(q3);
+    tree->insert(q11);
+    tree->insert(q17);
+    tree->insert(q21);
+    tree->insert(q23);
+
+    tree->remove(q1);
 
 
     Artist artist= Artist();
