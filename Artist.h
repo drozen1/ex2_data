@@ -68,9 +68,11 @@ class ArtistStreamTreeInfo{
 public:
     ArtistStreamTreeInfo(int songId) : numOfStreams(0), songId(songId) {}
 
-    int getNumOfStreams() const {
+    int getNumOfStreams()  {
         return numOfStreams;
     }
+
+
 
     bool operator==(const ArtistStreamTreeInfo &rhs) const {
         return songId == rhs.songId;
@@ -108,7 +110,7 @@ public:
         ArtistStreamTreeInfo::numOfStreams = numOfStreams;
     }
 
-    int getSongId() const {
+    int getSongId()  {
         return songId;
     }
 
@@ -133,7 +135,7 @@ public:
     MainTreeSongInfo(int artistId, int songId) : songId(songId), artistId(artistId),numOfStreams(0) {}
 
 
-    int getNumOfStreams() const {
+    int getNumOfStreams() {
         return numOfStreams;
     }
 
@@ -141,7 +143,7 @@ public:
         MainTreeSongInfo::numOfStreams = numOfStreams;
     }
 
-    int getSongId() const {
+    int getSongId()  {
         return songId;
     }
 

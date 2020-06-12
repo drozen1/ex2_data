@@ -38,6 +38,7 @@ namespace AVL {
         StatusType RemoveArtist(int artistID);
         StatusType AddSong(int artistID,int songID);
         StatusType  RemoveSong(int artistID,int songID);
+        StatusType AddToSongCount( int artistID, int songID, int count);
     private:
         HashTable<Artist> array_of_artists;
         AVL_tree<MainTreeSongInfo> main_songs_tree;
@@ -81,12 +82,41 @@ namespace AVL {
             return FAILURE; ///there is a song with the given singID to the current artist
         }
         NodeToRemoveSong->getElement()->removeSong(songID); //removing the song to the artist
-        MainTreeSongInfo new_node_key= MainTreeSongInfo(artistID,songID); //adding the song to the main_songs_tree
+        MainTreeSongInfo new_node_key= MainTreeSongInfo(artistID,songID); //removing the song to the main_songs_tree
         AVL_tree_node<MainTreeSongInfo> new_node = AVL_tree_node<MainTreeSongInfo>(&new_node_key);
         this->getMainSongsTree().remove(new_node);
 
         return SUCCESS;
     }
+
+    StatusType MusicManager::AddToSongCount(int artistID, int songID, int count) {
+        Link_Node<Artist> *NodeToAddSongCount=this->array_of_artists.retrieve_member(artistID);
+        if (NodeToAddSongCount==NULL ){
+            return FAILURE;
+        }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////check if necessary
+        ArtistStreamTreeInfo dummy_key = ArtistStreamTreeInfo(songID);
+        AVL_tree_node<ArtistStreamTreeInfo>* current_song =NodeToAddSongCount->getElement()->getStreamTree().find_node(&dummy_key);
+        if(current_song ==NULL){
+            return FAILURE; ///there is no a song with the given singID to the current artist
+        }
+        ArtistStreamTreeInfo* copy_of_current_song= new ArtistStreamTreeInfo(songID);
+        AVL_tree_node<ArtistStreamTreeInfo>* incrementedCopyOfSong= new AVL_tree_node<ArtistStreamTreeInfo>(copy_of_current_song);
+        ArtistStreamTreeInfo* current_song_data = incrementedCopyOfSong->getDataKey();
+        copy_of_current_song->setNumOfStreams(current_song_data->getNumOfStreams()+count);
+        NodeToAddSongCount->getElement()->getStreamTree().remove(*current_song);
+        NodeToAddSongCount->getElement()->getStreamTree().insert(*incrementedCopyOfSong);
+        ///global_tree
+        MainTreeSongInfo dummy_main_key = MainTreeSongInfo(artistID,songID);
+        AVL_tree_node<MainTreeSongInfo>* current_main_song =this->main_songs_tree.find_node(&dummy_main_key);
+        MainTreeSongInfo* copy_of_current_main_song= new MainTreeSongInfo(artistID,songID);
+        AVL_tree_node<MainTreeSongInfo>* incrementedCopyOf_main_Song= new AVL_tree_node<MainTreeSongInfo>(copy_of_current_main_song);
+        incrementedCopyOf_main_Song->getDataKey()->setNumOfStreams(current_main_song->getDataKey()->getNumOfStreams()+count);
+        this->main_songs_tree.remove(*current_main_song);
+        this->main_songs_tree.insert(*incrementedCopyOf_main_Song);
+        return SUCCESS;
+    }
+
 
 
 }

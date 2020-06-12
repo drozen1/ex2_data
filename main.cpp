@@ -14,8 +14,9 @@ int main() {
     AVL::MusicManager* m = new AVL::MusicManager();
     m->AddArtist(123);
     m->AddSong(123,1);
-    m->RemoveSong(123,1);
-
+    m->AddSong(123,2);
+    m->AddToSongCount(123,1,200);
+    m->AddToSongCount(123,2,200);
 
     int p1=1;
     int p3=3;
