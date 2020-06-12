@@ -8,6 +8,17 @@
 #include "MusicManager.h"
 ///
 int main() {
+    int p1=1;
+    int p2=2;
+    int p3=3;
+    AVL::AVL_tree<int>* tree= new AVL::AVL_tree<int>();
+    AVL::AVL_tree_node<int> q1=  AVL::AVL_tree_node<int>(&p1);
+    AVL::AVL_tree_node<int> q2=  AVL::AVL_tree_node<int>(&p2);
+    AVL::AVL_tree_node<int> q3=  AVL::AVL_tree_node<int>(&p3);
+    tree->insert(q1);  //////////////prob
+    tree->insert(q2);
+    tree->insert(q3);
+
 
     Artist artist= Artist();
     artist.addSong(123);

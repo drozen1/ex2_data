@@ -28,7 +28,7 @@ namespace AVL {
         AVL_tree_node *right_son;
         AVL_tree_node *left_son;
         int height;
-        int num_of_sons;
+        int sizeOfInnerTree;
 
     public:
         Element *getDataKey() const;
@@ -47,6 +47,7 @@ namespace AVL {
 
         void updateHeight();
 
+        int calcNumOfSons();
 
         AVL_tree_node *getParent() const {
             return parent;
@@ -87,7 +88,7 @@ namespace AVL {
             right_son = (nullptr);
             left_son = (nullptr);
             height = 0;
-            num_of_sons = 0;
+            sizeOfInnerTree = 0; /// 1?1?
         }
 
 
@@ -123,7 +124,11 @@ namespace AVL {
         void Print_node();
 
 
+        void update_size_of_inner_tree();
 
+        void setSizeOfInnerTree(int sizeOfInnerTree);
+
+        int getSizeOfInnerTree() const;
 
 
     };
@@ -243,13 +248,48 @@ namespace AVL {
 
     template<class Element>
     int AVL_tree_node<Element>::getNumOfSons() const {
-        return num_of_sons;
+        return sizeOfInnerTree;
     }
 
     template<class Element>
     void AVL_tree_node<Element>::setNumOfSons(int numOfSons) {
-        num_of_sons = numOfSons;
+        sizeOfInnerTree = numOfSons;
     }
+
+    template<class Element>
+    int AVL_tree_node<Element>::calcNumOfSons() {
+        int total_sons=0;
+
+        if (this->getLeftSon()!=NULL){
+            total_sons+=this->getLeftSon()->getNumOfSons();
+        }
+        if (this->getRightSon()!=NULL){
+            total_sons+=this->getRightSon()->getNumOfSons();
+        }
+        return total_sons;
+    }
+
+    template<class Element>
+    void AVL_tree_node<Element>::setSizeOfInnerTree(int sizeOfInnerTree) {
+        AVL_tree_node::sizeOfInnerTree = sizeOfInnerTree;
+    }
+
+    template<class Element>
+    int AVL_tree_node<Element>::getSizeOfInnerTree() const {
+        return sizeOfInnerTree;
+    }
+
+    template<class Element>
+    void AVL_tree_node<Element>::update_size_of_inner_tree() {
+        AVL_tree_node<Element>* cur= this;
+        while(cur!=NULL){
+            int new_size=cur->calcNumOfSons();
+            cur->setSizeOfInnerTree(new_size+1);
+            cur=cur->getParent();
+        }
+        return;
+    }
+
 
 
 }

@@ -181,6 +181,7 @@ namespace AVL {
             last->setLeftSon(&node_toadd);
         }
         node_toadd.setParent(last);
+        node_toadd.update_size_of_inner_tree();
         updateTree(&node_toadd);
         return SUCCESS;
     }
@@ -257,6 +258,11 @@ namespace AVL {
         RightSonOfP->getRightSon()->updateHeight();
         RightSonOfP->getLeftSon()->updateHeight();
         RightSonOfP->updateHeight();
+
+        ///add this one newwww
+        RightSonOfP->getRightSon()->setSizeOfInnerTree(RightSonOfP->getRightSon()->calcNumOfSons());
+        RightSonOfP->getLeftSon()->setSizeOfInnerTree(RightSonOfP->getLeftSon()->calcNumOfSons());
+        RightSonOfP->setSizeOfInnerTree(RightSonOfP->calcNumOfSons());
 
         if (updateRoot) {
             this->setRoot(RightSonOfP);

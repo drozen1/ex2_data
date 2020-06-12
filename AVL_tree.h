@@ -172,6 +172,7 @@ namespace AVL {
             last->setLeftSon(&node_toadd);
         }
         node_toadd.setParent(last);
+        node_toadd.update_size_of_inner_tree();
         updateTree(&node_toadd);
         return SUCCESS;
     }
