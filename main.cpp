@@ -11,18 +11,30 @@ int main() {
     int p1=1;
     int p2=2;
     int p3=3;
+    int p4=4;
+    int p5=5;
+    int p6=6;
+
     AVL::AVL_tree<int>* tree= new AVL::AVL_tree<int>();
     AVL::AVL_tree_node<int> q1=  AVL::AVL_tree_node<int>(&p1);
     AVL::AVL_tree_node<int> q2=  AVL::AVL_tree_node<int>(&p2);
     AVL::AVL_tree_node<int> q3=  AVL::AVL_tree_node<int>(&p3);
-    tree->insert(q1);  //////////////prob
+    AVL::AVL_tree_node<int> q4=  AVL::AVL_tree_node<int>(&p4);
+    AVL::AVL_tree_node<int> q5=  AVL::AVL_tree_node<int>(&p5);
+    AVL::AVL_tree_node<int> q6=  AVL::AVL_tree_node<int>(&p6);
+
+
+    tree->insert(q3);//////////////prob
     tree->insert(q2);
-    tree->insert(q3);
+    tree->insert(q4);
+    tree->insert(q1);
+    tree->insert(q5);
+    tree->remove(q3);
 
 
     Artist artist= Artist();
     artist.addSong(123);
-    artist.addSong(456);
+    artist.addSong(123);
     artist.addSong(789);
     artist.addSong(111);
     artist.removeSong(111);
@@ -106,9 +118,6 @@ int main() {
     example_tree_regular.insert(node6);
     example_tree_regular.insert(node7);
     example_tree_regular.insert(node8);
-
-
-
 
 
 
