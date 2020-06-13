@@ -94,6 +94,10 @@ namespace AVL {
 
         AVL_tree_node<Element>* retrieveMax();
 
+
+
+        AVL_tree_node<Element>* select(int rank);
+
     private:
         AVL_tree_node<Element> *root;
         AVL_tree_node<Element>* minimum;
@@ -772,6 +776,19 @@ namespace AVL {
         }
         return cur;
     }
+
+
+
+    template<class Element>
+    AVL_tree_node<Element> *AVL_tree<Element>::select(int rank) {
+
+        if(this->root==NULL||rank>this->root->getSizeOfInnerTree()){
+            return NULL;
+        }
+        return this->root->select(rank);
+    }
+
+
 
 
 }

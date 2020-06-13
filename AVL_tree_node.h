@@ -49,6 +49,10 @@ namespace AVL {
 
         int calcNumOfSons();
 
+        int retrieve_left_size();
+
+        AVL_tree_node<Element>* select(int rank);
+
         AVL_tree_node *getParent() const {
             return parent;
         }
@@ -88,7 +92,7 @@ namespace AVL {
             right_son = (nullptr);
             left_son = (nullptr);
             height = 0;
-            sizeOfInnerTree = 0; /// 1?1?
+            sizeOfInnerTree = 0;
         }
 
 
@@ -290,6 +294,26 @@ namespace AVL {
         return;
     }
 
+    template<class Element>
+    int AVL_tree_node<Element>::retrieve_left_size() {
+        if (this==NULL|| this->getLeftSon()==NULL){
+            return 0;
+        }
+        return this->getLeftSon()->getSizeOfInnerTree();
+    }
+
+    template<class Element>
+    AVL_tree_node<Element>* AVL_tree_node<Element>::select(int rank) {
+        if(rank-1==this->retrieve_left_size()){
+            return this;
+        }
+        if(rank-1<this->retrieve_left_size()){
+            return this->getLeftSon()->select(rank);
+        } else{
+            int left_size=this->retrieve_left_size();
+            return this->getRightSon()->select(rank-left_size-1);
+        }
+    }
 
 
 }

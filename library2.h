@@ -20,12 +20,12 @@ extern "C" {
 
 /* Return Values
  * ----------------------------------- */
-typedef enum {
-    SUCCESS = 0,
-    FAILURE = -1,
-    ALLOCATION_ERROR = -2,
-    INVALID_INPUT = -3
-} StatusType;
+//typedef enum {
+//    SUCCESS = 0,
+//    FAILURE = -1,
+//    ALLOCATION_ERROR = -2,
+//    INVALID_INPUT = -3
+//} StatusType;
 
 
 void *Init();
