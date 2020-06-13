@@ -18,9 +18,10 @@
  *
  */
 
-namespace AVL {
+
 
     using namespace AVLUtils;
+    using namespace AVL;
 
     class MusicManager {
 
@@ -30,18 +31,25 @@ namespace AVL {
         }
 
 
-        AVL_tree <MainTreeSongInfo> &getMainSongsTree()  {
+        AVL_tree <MainTreeSongInfo> &getMainSongsTree() {
             return main_songs_tree;
         }
 
         StatusType AddArtist(int artistId);
+
         StatusType RemoveArtist(int artistID);
-        StatusType AddSong(int artistID,int songID);
-        StatusType  RemoveSong(int artistID,int songID);
-        StatusType AddToSongCount( int artistID, int songID, int count);
+
+        StatusType AddSong(int artistID, int songID);
+
+        StatusType RemoveSong(int artistID, int songID);
+
+        StatusType AddToSongCount(int artistID, int songID, int count);
+
+        StatusType GetArtistBestSong(int artistID, int *songID);
+
     private:
-        HashTable<Artist> array_of_artists;
-        AVL_tree<MainTreeSongInfo> main_songs_tree;
+        HashTable <Artist> array_of_artists;
+        AVL_tree <MainTreeSongInfo> main_songs_tree;
     };
 
     StatusType MusicManager::AddArtist(int artistId) {
@@ -49,40 +57,41 @@ namespace AVL {
     }
 
     StatusType MusicManager::RemoveArtist(int artistID) {
-        Link_Node<Artist> *NodeToRemove=this->array_of_artists.retrieve_member(artistID);
-        if (NodeToRemove==NULL || NodeToRemove->getElement()->getMostStreamsSong()!=NULL){
+        Link_Node<Artist> *NodeToRemove = this->array_of_artists.retrieve_member(artistID);
+        if (NodeToRemove == NULL || NodeToRemove->getElement()->getMostStreamsSong() != NULL) {
             return FAILURE;
         }
         return this->array_of_artists.removeFromTable(artistID);
     }
 
     StatusType MusicManager::AddSong(int artistID, int songID) {
-        Link_Node<Artist> *NodeToAddSong=this->array_of_artists.retrieve_member(artistID);
-        if (NodeToAddSong==NULL ){
+        Link_Node<Artist> *NodeToAddSong = this->array_of_artists.retrieve_member(artistID);
+        if (NodeToAddSong == NULL) {
             return FAILURE;
         }
         ArtistRegularTreeInfo dummy_key = ArtistRegularTreeInfo(songID);
-        if(NodeToAddSong->getElement()->getRegularTree().find_node(&dummy_key) !=NULL){
+        if (NodeToAddSong->getElement()->getRegularTree().find_node(&dummy_key) != NULL) {
             return FAILURE; ///there is a song with the given singID to the current artist
         }
         NodeToAddSong->getElement()->addSong(songID); //adding the song to the artist
-        MainTreeSongInfo* new_node_key= new MainTreeSongInfo(artistID,songID); //adding the song to the main_songs_tree
-        AVL_tree_node<MainTreeSongInfo>* new_node = new AVL_tree_node<MainTreeSongInfo>(new_node_key);
+        MainTreeSongInfo *new_node_key = new MainTreeSongInfo(artistID,
+                                                              songID); //adding the song to the main_songs_tree
+        AVL_tree_node<MainTreeSongInfo> *new_node = new AVL_tree_node<MainTreeSongInfo>(new_node_key);
         this->getMainSongsTree().insert(*new_node);
         return SUCCESS;
     }
 
     StatusType MusicManager::RemoveSong(int artistID, int songID) {
-        Link_Node<Artist> *NodeToRemoveSong=this->array_of_artists.retrieve_member(artistID);
-        if (NodeToRemoveSong==NULL ){
+        Link_Node<Artist> *NodeToRemoveSong = this->array_of_artists.retrieve_member(artistID);
+        if (NodeToRemoveSong == NULL) {
             return FAILURE;
         }
         ArtistRegularTreeInfo dummy_key = ArtistRegularTreeInfo(songID);
-        if(NodeToRemoveSong->getElement()->getRegularTree().find_node(&dummy_key) ==NULL){
+        if (NodeToRemoveSong->getElement()->getRegularTree().find_node(&dummy_key) == NULL) {
             return FAILURE; ///there is a song with the given singID to the current artist
         }
         NodeToRemoveSong->getElement()->removeSong(songID); //removing the song to the artist
-        MainTreeSongInfo new_node_key= MainTreeSongInfo(artistID,songID); //removing the song to the main_songs_tree
+        MainTreeSongInfo new_node_key = MainTreeSongInfo(artistID, songID); //removing the song to the main_songs_tree
         AVL_tree_node<MainTreeSongInfo> new_node = AVL_tree_node<MainTreeSongInfo>(&new_node_key);
         this->getMainSongsTree().remove(new_node);
 
@@ -90,36 +99,51 @@ namespace AVL {
     }
 
     StatusType MusicManager::AddToSongCount(int artistID, int songID, int count) {
-        Link_Node<Artist> *NodeToAddSongCount=this->array_of_artists.retrieve_member(artistID);
-        if (NodeToAddSongCount==NULL ){
+        Link_Node<Artist> *NodeToAddSongCount = this->array_of_artists.retrieve_member(artistID);
+        if (NodeToAddSongCount == NULL) {
             return FAILURE;
         }
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////check if necessary
+        ///////////////////////////////////////////////////////////////////////////  check if necessary  below ///////////////////////////////////////////////
         ArtistStreamTreeInfo dummy_key = ArtistStreamTreeInfo(songID);
-        AVL_tree_node<ArtistStreamTreeInfo>* current_song =NodeToAddSongCount->getElement()->getStreamTree().find_node(&dummy_key);
-        if(current_song ==NULL){
+        AVL_tree_node<ArtistStreamTreeInfo> *current_song = NodeToAddSongCount->getElement()->getStreamTree().find_node(
+                &dummy_key);
+        if (current_song == NULL) {
             return FAILURE; ///there is no a song with the given singID to the current artist
         }
-        ArtistStreamTreeInfo* copy_of_current_song= new ArtistStreamTreeInfo(songID);
-        AVL_tree_node<ArtistStreamTreeInfo>* incrementedCopyOfSong= new AVL_tree_node<ArtistStreamTreeInfo>(copy_of_current_song);
-        ArtistStreamTreeInfo* current_song_data = incrementedCopyOfSong->getDataKey();
-        copy_of_current_song->setNumOfStreams(current_song_data->getNumOfStreams()+count);
+        ArtistStreamTreeInfo *copy_of_current_song = new ArtistStreamTreeInfo(songID);
+        AVL_tree_node<ArtistStreamTreeInfo> *incrementedCopyOfSong = new AVL_tree_node<ArtistStreamTreeInfo>(
+                copy_of_current_song);
+        ArtistStreamTreeInfo *current_song_data = current_song->getDataKey();
+        copy_of_current_song->setNumOfStreams(current_song_data->getNumOfStreams() + count);
         NodeToAddSongCount->getElement()->getStreamTree().remove(*current_song);
         NodeToAddSongCount->getElement()->getStreamTree().insert(*incrementedCopyOfSong);
+        ////update max
+        NodeToAddSongCount->getElement()->updateMostStreamsSong();
         ///global_tree
-        MainTreeSongInfo dummy_main_key = MainTreeSongInfo(artistID,songID);
-        AVL_tree_node<MainTreeSongInfo>* current_main_song =this->main_songs_tree.find_node(&dummy_main_key);
-        MainTreeSongInfo* copy_of_current_main_song= new MainTreeSongInfo(artistID,songID);
-        AVL_tree_node<MainTreeSongInfo>* incrementedCopyOf_main_Song= new AVL_tree_node<MainTreeSongInfo>(copy_of_current_main_song);
-        incrementedCopyOf_main_Song->getDataKey()->setNumOfStreams(current_main_song->getDataKey()->getNumOfStreams()+count);
+        MainTreeSongInfo dummy_main_key = MainTreeSongInfo(artistID, songID);
+        AVL_tree_node<MainTreeSongInfo> *current_main_song = this->main_songs_tree.find_node(&dummy_main_key);
+        MainTreeSongInfo *copy_of_current_main_song = new MainTreeSongInfo(artistID, songID);
+        AVL_tree_node<MainTreeSongInfo> *incrementedCopyOf_main_Song = new AVL_tree_node<MainTreeSongInfo>(
+                copy_of_current_main_song);
+        incrementedCopyOf_main_Song->getDataKey()->setNumOfStreams(
+                current_main_song->getDataKey()->getNumOfStreams() + count);
         this->main_songs_tree.remove(*current_main_song);
         this->main_songs_tree.insert(*incrementedCopyOf_main_Song);
         return SUCCESS;
     }
 
+    StatusType MusicManager::GetArtistBestSong(int artistID, int *songID) {
+        Link_Node<Artist> *NodeToGetArtistBestSong = this->array_of_artists.retrieve_member(artistID);
+        if (NodeToGetArtistBestSong == NULL || NodeToGetArtistBestSong->getElement()->getMostStreamsSong() == NULL) {
+            return FAILURE;
+        }
+        *songID = (NodeToGetArtistBestSong->getElement()->getMostStreamsSong()->getDataKey()->getSongId());
+        return SUCCESS;
+    }
 
 
-}
+
+
 
 
 

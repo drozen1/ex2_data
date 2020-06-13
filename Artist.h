@@ -162,8 +162,7 @@ public:
 
 
     bool operator==(const MainTreeSongInfo &rhs) const {
-        return numOfStreams == rhs.numOfStreams &&
-               songId == rhs.songId &&
+        return songId == rhs.songId &&
                artistId == rhs.artistId;
     }
 

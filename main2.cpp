@@ -135,7 +135,7 @@ static errorType OnAddSong(void* DS, const char* const command);
 static errorType OnRemoveSong(void* DS, const char* const command);
 static errorType OnAddToSongCount(void* DS, const char* const command);
 static errorType OnGetArtistBestSong(void* DS, const char* const command);
-static errorType OnGetRecommendedSongInPlace(void* DS, const char* const command);
+//static errorType OnGetRecommendedSongInPlace(void* DS, const char* const command);
 static errorType OnQuit(void** DS, const char* const command);
 
 /***************************************************************************/
@@ -172,9 +172,9 @@ static errorType parser(const char* const command) {
         case (GETARTISTBESTSONG_CMD):
             rtn_val = OnGetArtistBestSong(DS, command_args);
             break;
-        case (GETRECOMMENDEDSONGINPLACE_CMD):
-            rtn_val = OnGetRecommendedSongInPlace(DS, command_args);
-            break;
+//        case (GETRECOMMENDEDSONGINPLACE_CMD):
+//            rtn_val = OnGetRecommendedSongInPlace(DS, command_args);
+//            break;
         case (QUIT_CMD):
             rtn_val = OnQuit(&DS, command_args);
             break;
@@ -295,20 +295,20 @@ static errorType OnGetArtistBestSong(void* DS, const char* const command) {
     return error_free;
 }
 
-static errorType OnGetRecommendedSongInPlace(void* DS, const char* const command) {
-    int rank, artistId, songId;
-
-    ValidateRead(sscanf(command, "%d", &rank), 1, "%s failed.\n", commandStr[GETRECOMMENDEDSONGINPLACE_CMD]);
-    StatusType res = GetRecommendedSongInPlace(DS, rank, &artistId, &songId);
-
-    if (res != SUCCESS) {
-        printf("%s: %s\n", commandStr[GETRECOMMENDEDSONGINPLACE_CMD], ReturnValToStr(res));
-        return error_free;
-    }
-
-    printf("%s: Artist %d Song %d\n", commandStr[GETRECOMMENDEDSONGINPLACE_CMD], artistId, songId);
-    return error_free;
-}
+//static errorType OnGetRecommendedSongInPlace(void* DS, const char* const command) {
+//    int rank, artistId, songId;
+//
+//    ValidateRead(sscanf(command, "%d", &rank), 1, "%s failed.\n", commandStr[GETRECOMMENDEDSONGINPLACE_CMD]);
+//    StatusType res = GetRecommendedSongInPlace(DS, rank, &artistId, &songId);
+//
+//    if (res != SUCCESS) {
+//        printf("%s: %s\n", commandStr[GETRECOMMENDEDSONGINPLACE_CMD], ReturnValToStr(res));
+//        return error_free;
+//    }
+//
+//    printf("%s: Artist %d Song %d\n", commandStr[GETRECOMMENDEDSONGINPLACE_CMD], artistId, songId);
+//    return error_free;
+//}
 
 static errorType OnQuit(void** DS, const char* const command) {
     Quit(DS);
