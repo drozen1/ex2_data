@@ -73,7 +73,6 @@ StatusType MusicManager::GetRecommendedSongInPlace(int rank, int *artistID, int 
 StatusType MusicManager::AddArtist(int artistId) {
         return (this->array_of_artists.addToTable(artistId));
     }
-
     StatusType MusicManager::RemoveArtist(int artistID) {
         Link_Node<Artist> *NodeToRemove = this->array_of_artists.retrieve_member(artistID);
         if (NodeToRemove == NULL || NodeToRemove->getElement()->getMostStreamsSong() != NULL) {
@@ -106,16 +105,17 @@ StatusType MusicManager::AddArtist(int artistId) {
         }
         ArtistRegularTreeInfo dummy_key = ArtistRegularTreeInfo(songID);
         if (NodeToRemoveSong->getElement()->getRegularTree().find_node(&dummy_key) == NULL) {
-            return FAILURE; ///there is a song with the given singID to the current artist
+            return FAILURE;
         }
-        NodeToRemoveSong->getElement()->removeSong(songID); //removing the song to the artist
-        MainTreeSongInfo new_node_key = MainTreeSongInfo(artistID, songID); //removing the song to the main_songs_tree
-        AVL_tree_node<MainTreeSongInfo> new_node = AVL_tree_node<MainTreeSongInfo>(&new_node_key);
-        this->getMainSongsTree().remove(new_node);
+        NodeToRemoveSong->getElement()->removeSong(songID); //removing the song from the artist
 
+        MainTreeSongInfo new_node_key = MainTreeSongInfo(artistID, songID); //removing the song to the main_songs_tree
+
+        AVL_tree_node<MainTreeSongInfo> new_node = AVL_tree_node<MainTreeSongInfo>(&new_node_key);
+
+        this->getMainSongsTree().remove(new_node);
         return SUCCESS;
     }
-
     StatusType MusicManager::AddToSongCount(int artistID, int songID, int count) {
         Link_Node<Artist> *NodeToAddSongCount = this->array_of_artists.retrieve_member(artistID);
         if (NodeToAddSongCount == NULL) {
@@ -158,8 +158,6 @@ StatusType MusicManager::AddArtist(int artistId) {
         *songID = (NodeToGetArtistBestSong->getElement()->getMostStreamsSong()->getDataKey()->getSongId());
         return SUCCESS;
     }
-
-
 
 
 

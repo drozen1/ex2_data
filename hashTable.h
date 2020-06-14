@@ -89,6 +89,7 @@ namespace AVL {
     template<class T>
     StatusType HashTable<T>::multiply_size() {
         int place;
+        int originalSize = size_of_array;
         this->setSizeOfArray(size_of_array*2);
         Doubly_Linked_List<T>** new_table= new Doubly_Linked_List<T>*[size_of_array];
         for (int i = 0; i <size_of_array ; ++i) {
@@ -103,6 +104,10 @@ namespace AVL {
                 new_table[place]->setNewNodeAfterNode(NULL, node_to_copy);
             }
         }
+
+        for (int i = 0; i< originalSize; i++){
+            delete(table[i]);
+        }
         delete[] table;
         table=new_table;
         return SUCCESS;
@@ -110,6 +115,7 @@ namespace AVL {
 
     template<class T>
     StatusType HashTable<T>::divide_size() {
+        int originalSize = size_of_array;
         int place;
         this->setSizeOfArray(size_of_array/2);
         Doubly_Linked_List<T>** new_table= new Doubly_Linked_List<T>*[size_of_array];
@@ -124,6 +130,9 @@ namespace AVL {
                 place = hashFunction(node_to_copy->getNum());
                 new_table[place]->setNewNodeAfterNode(NULL, node_to_copy);
             }
+        }
+        for (int i = 0; i< originalSize; i++){
+            delete(table[i]);
         }
         delete[] table;
         table=new_table;

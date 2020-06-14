@@ -304,6 +304,9 @@ namespace AVL {
 
     template<class Element>
     AVL_tree_node<Element>* AVL_tree_node<Element>::select(int rank) {
+        if(this==NULL){// Added by Leon
+            return NULL;
+        }
         if(rank-1==this->retrieve_left_size()){
             return this;
         }

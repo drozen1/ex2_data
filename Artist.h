@@ -263,7 +263,7 @@ StatusType Artist::addSong(int song_id) {
 
 StatusType Artist::removeSong(int song_id) {
     ArtistRegularTreeInfo dummy_regular_key= ArtistRegularTreeInfo(song_id);
-    AVL::AVL_tree_node<ArtistRegularTreeInfo> dummy_regular_node =  AVL::AVL_tree_node<ArtistRegularTreeInfo>(&dummy_regular_key);
+    AVL::AVL_tree_node<ArtistRegularTreeInfo> dummy_regular_node = AVL::AVL_tree_node<ArtistRegularTreeInfo>(&dummy_regular_key);
     if(this->regular_tree.remove(dummy_regular_node)==FAILURE){
         return FAILURE;
     }
