@@ -53,6 +53,15 @@ StatusType GetArtistBestSong(void *DS, int artistID, int *songID){
     return ((MusicManager *)DS)-> GetArtistBestSong(artistID,songID);
 }
 
+StatusType GetRecommendedSongInPlace(void *DS, int rank, int *artistID, int *songID){
+    if ( DS ==NULL || rank <=0 || artistID==NULL || songID==NULL ){
+        return INVALID_INPUT
+    }
+    return ((MusicManager *)DS)->GetRecommendedSongInPlace(rank,artistID,songID);
+}
+
+
+
 void Quit(void** DS){
         if (DS == NULL){
             return;

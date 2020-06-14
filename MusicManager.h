@@ -47,12 +47,30 @@
 
         StatusType GetArtistBestSong(int artistID, int *songID);
 
+        StatusType GetRecommendedSongInPlace(int rank, int *artistID, int *songID);
+
+
     private:
         HashTable <Artist> array_of_artists;
         AVL_tree <MainTreeSongInfo> main_songs_tree;
     };
 
-    StatusType MusicManager::AddArtist(int artistId) {
+
+StatusType MusicManager::GetRecommendedSongInPlace(int rank, int *artistID, int *songID) {
+    int sizeOfTree = this->main_songs_tree.getRoot()->getSizeOfInnerTree();
+    AVL::AVL_tree_node<MainTreeSongInfo>* wanted_song =  this->main_songs_tree.select(sizeOfTree-(rank-1));
+    if(!wanted_song){
+        return FAILURE;
+    }
+    else {
+        *artistID = wanted_song->getDataKey()->getArtistId();
+        *songID = wanted_song->getDataKey()->getSongId();
+        return SUCCESS;
+    }
+
+}
+
+StatusType MusicManager::AddArtist(int artistId) {
         return (this->array_of_artists.addToTable(artistId));
     }
 
@@ -140,8 +158,6 @@
         *songID = (NodeToGetArtistBestSong->getElement()->getMostStreamsSong()->getDataKey()->getSongId());
         return SUCCESS;
     }
-
-
 
 
 
