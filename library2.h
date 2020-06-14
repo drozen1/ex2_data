@@ -20,12 +20,12 @@ extern "C" {
 
 /* Return Values
  * ----------------------------------- */
-//typedef enum {
-//    SUCCESS = 0,
-//    FAILURE = -1,
-//    ALLOCATION_ERROR = -2,
-//    INVALID_INPUT = -3
-//} StatusType;
+typedef enum {
+    SUCCESS = 0,
+    FAILURE = -1,
+    ALLOCATION_ERROR = -2,
+    INVALID_INPUT = -3
+} StatusType;
 
 
 void *Init();
@@ -42,7 +42,7 @@ StatusType AddToSongCount(void *DS, int artistID, int songID, int count);
 
 StatusType GetArtistBestSong(void *DS, int artistID, int *songId);
 
-//StatusType GetRecommendedSongInPlace(void *DS, int rank, int *artistId, int *songId);
+StatusType GetRecommendedSongInPlace(void *DS, int rank, int *artistId, int *songId);
 
 void Quit(void** DS);
 
