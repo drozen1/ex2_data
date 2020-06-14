@@ -132,7 +132,7 @@ class MainTreeSongInfo{
 
 public:
 
-    MainTreeSongInfo(int artistId, int songId) : songId(songId), artistId(artistId),numOfStreams(0) {}
+    MainTreeSongInfo(int songId, int artistId) : songId(songId), artistId(artistId),numOfStreams(0) {}
 
 
     int getNumOfStreams() {
@@ -206,9 +206,9 @@ public:
     }
 
 private:
-    int numOfStreams;
     int songId;
     int artistId;
+    int numOfStreams;
 
 
 };
