@@ -12,7 +12,7 @@ using namespace AVLUtils;
 
 class ArtistRegularTreeInfo {
 public:
-    ArtistRegularTreeInfo(int songId) : songId(songId) {}
+    ArtistRegularTreeInfo(int songId, int numOfStreams=0) : songId(songId),numOfStreams(numOfStreams) {}
 
     virtual ~ArtistRegularTreeInfo() {
 
@@ -57,6 +57,11 @@ public:
 
 private:
     int songId;
+    int numOfStreams;
+public:
+    int getNumOfStreams() const;
+
+    void setNumOfStreams(int numOfStreams);
 };
 
 ArtistRegularTreeInfo &ArtistRegularTreeInfo::operator=(const ArtistRegularTreeInfo &rhs) {
@@ -64,9 +69,17 @@ ArtistRegularTreeInfo &ArtistRegularTreeInfo::operator=(const ArtistRegularTreeI
     return *this;
 }
 
+int ArtistRegularTreeInfo::getNumOfStreams() const {
+    return numOfStreams;
+}
+
+void ArtistRegularTreeInfo::setNumOfStreams(int numOfStreams) {
+    ArtistRegularTreeInfo::numOfStreams = numOfStreams;
+}
+
 class ArtistStreamTreeInfo{
 public:
-    ArtistStreamTreeInfo(int songId) : numOfStreams(0), songId(songId) {}
+    ArtistStreamTreeInfo(int songId, int numOfStreams=0) :  songId(songId),numOfStreams(numOfStreams) {}
 
     int getNumOfStreams()  {
         return numOfStreams;
@@ -123,8 +136,9 @@ public:
     }
 
 private:
-    int numOfStreams;
     int songId;
+    int numOfStreams;
+
 };
 
 
@@ -132,7 +146,7 @@ class MainTreeSongInfo{
 
 public:
 
-    MainTreeSongInfo(int songId, int artistId) : songId(songId), artistId(artistId),numOfStreams(0) {}
+    MainTreeSongInfo(int songId, int artistId,int numOfStreams=0) : songId(songId), artistId(artistId),numOfStreams(numOfStreams) {}
 
 
     int getNumOfStreams() {
@@ -229,7 +243,7 @@ public:
 
     StatusType addSong(int song_id);
 
-    StatusType removeSong(int song_id);
+    StatusType removeSong(int song_id,int num_of_streams);
 
 private:
     AVL::AVL_tree<ArtistRegularTreeInfo> regular_tree;
@@ -260,29 +274,17 @@ StatusType Artist::addSong(int song_id) {
 }
 
 
-//StatusType Artist::removeSong(int song_id) {
-//    ArtistRegularTreeInfo dummy_regular_key= ArtistRegularTreeInfo(song_id);
-//    AVL::AVL_tree_node<ArtistRegularTreeInfo> dummy_regular_node = AVL::AVL_tree_node<ArtistRegularTreeInfo>(&dummy_regular_key);
-//    if(this->regular_tree.remove(dummy_regular_node)==FAILURE){
-//        return FAILURE;
-//    }
-//    ArtistStreamTreeInfo dummy_stream_key=  ArtistStreamTreeInfo(song_id);
-//    AVL::AVL_tree_node<ArtistStreamTreeInfo> dummy_stream_node =  AVL::AVL_tree_node<ArtistStreamTreeInfo>(&dummy_stream_key);
-//    stream_tree.remove(dummy_stream_node);
-//    this->updateMostStreamsSong();
-//    return SUCCESS;
-//}
-
-StatusType Artist::removeSong(int song_id) {
+StatusType Artist::removeSong(int song_id,int num_of_streams) {
 
     ArtistRegularTreeInfo* dummy_regular_key= new ArtistRegularTreeInfo(song_id);
+
 
     AVL::AVL_tree_node<ArtistRegularTreeInfo>* dummy_regular_node = new AVL::AVL_tree_node<ArtistRegularTreeInfo>(dummy_regular_key);
     if(this->regular_tree.remove(*dummy_regular_node)==FAILURE){
         return FAILURE;
     }
 
-    ArtistStreamTreeInfo* dummy_stream_key= new  ArtistStreamTreeInfo(song_id);
+    ArtistStreamTreeInfo* dummy_stream_key= new  ArtistStreamTreeInfo(song_id,num_of_streams);
     AVL::AVL_tree_node<ArtistStreamTreeInfo>* dummy_stream_node =  new AVL::AVL_tree_node<ArtistStreamTreeInfo>(dummy_stream_key);
 
     stream_tree.remove(*dummy_stream_node);
