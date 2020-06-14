@@ -209,8 +209,6 @@ private:
     int songId;
     int artistId;
     int numOfStreams;
-
-
 };
 
 
@@ -261,15 +259,35 @@ StatusType Artist::addSong(int song_id) {
     return SUCCESS;
 }
 
+
+//StatusType Artist::removeSong(int song_id) {
+//    ArtistRegularTreeInfo dummy_regular_key= ArtistRegularTreeInfo(song_id);
+//    AVL::AVL_tree_node<ArtistRegularTreeInfo> dummy_regular_node = AVL::AVL_tree_node<ArtistRegularTreeInfo>(&dummy_regular_key);
+//    if(this->regular_tree.remove(dummy_regular_node)==FAILURE){
+//        return FAILURE;
+//    }
+//    ArtistStreamTreeInfo dummy_stream_key=  ArtistStreamTreeInfo(song_id);
+//    AVL::AVL_tree_node<ArtistStreamTreeInfo> dummy_stream_node =  AVL::AVL_tree_node<ArtistStreamTreeInfo>(&dummy_stream_key);
+//    stream_tree.remove(dummy_stream_node);
+//    this->updateMostStreamsSong();
+//    return SUCCESS;
+//}
+
 StatusType Artist::removeSong(int song_id) {
-    ArtistRegularTreeInfo dummy_regular_key= ArtistRegularTreeInfo(song_id);
-    AVL::AVL_tree_node<ArtistRegularTreeInfo> dummy_regular_node = AVL::AVL_tree_node<ArtistRegularTreeInfo>(&dummy_regular_key);
-    if(this->regular_tree.remove(dummy_regular_node)==FAILURE){
+
+    ArtistRegularTreeInfo* dummy_regular_key= new ArtistRegularTreeInfo(song_id);
+
+    AVL::AVL_tree_node<ArtistRegularTreeInfo>* dummy_regular_node = new AVL::AVL_tree_node<ArtistRegularTreeInfo>(dummy_regular_key);
+    if(this->regular_tree.remove(*dummy_regular_node)==FAILURE){
         return FAILURE;
     }
-    ArtistStreamTreeInfo dummy_stream_key=  ArtistStreamTreeInfo(song_id);
-    AVL::AVL_tree_node<ArtistStreamTreeInfo> dummy_stream_node =  AVL::AVL_tree_node<ArtistStreamTreeInfo>(&dummy_stream_key);
-    stream_tree.remove(dummy_stream_node);
+
+    ArtistStreamTreeInfo* dummy_stream_key= new  ArtistStreamTreeInfo(song_id);
+    AVL::AVL_tree_node<ArtistStreamTreeInfo>* dummy_stream_node =  new AVL::AVL_tree_node<ArtistStreamTreeInfo>(dummy_stream_key);
+
+    stream_tree.remove(*dummy_stream_node);
+    delete dummy_stream_node;
+    delete dummy_regular_node;
     this->updateMostStreamsSong();
     return SUCCESS;
 }
