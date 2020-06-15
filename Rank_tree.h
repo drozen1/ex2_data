@@ -266,10 +266,13 @@ namespace AVL {
         RightSonOfP->updateHeight();
 
         ///this was added !
-        RightSonOfP->getRightSon()->setSizeOfInnerTree(RightSonOfP->getRightSon()->calcNumOfSons()+1);
-        RightSonOfP->getLeftSon()->setSizeOfInnerTree(RightSonOfP->getLeftSon()->calcNumOfSons()+1);
+        if(RightSonOfP->getRightSon()!=NULL){
+            RightSonOfP->getRightSon()->setSizeOfInnerTree(RightSonOfP->getRightSon()->calcNumOfSons()+1);
+        }
+        if(RightSonOfP->getLeftSon()!=NULL){
+            RightSonOfP->getLeftSon()->setSizeOfInnerTree(RightSonOfP->getLeftSon()->calcNumOfSons()+1);
+        }
         RightSonOfP->setSizeOfInnerTree(RightSonOfP->calcNumOfSons()+1);
-
         if (updateRoot) {
             this->setRoot(RightSonOfP);
         }
@@ -307,8 +310,12 @@ namespace AVL {
         LeftSonOfP->updateHeight();
 
         ///this was added !
-        LeftSonOfP->getRightSon()->setSizeOfInnerTree(LeftSonOfP->getRightSon()->calcNumOfSons()+1);
-        LeftSonOfP->getLeftSon()->setSizeOfInnerTree(LeftSonOfP->getLeftSon()->calcNumOfSons()+1);
+        if(LeftSonOfP->getRightSon()!=NULL){
+            LeftSonOfP->getRightSon()->setSizeOfInnerTree(LeftSonOfP->getRightSon()->calcNumOfSons()+1);
+        }
+        if (LeftSonOfP->getLeftSon()!=NULL){
+            LeftSonOfP->getLeftSon()->setSizeOfInnerTree(LeftSonOfP->getLeftSon()->calcNumOfSons()+1);
+        }
         LeftSonOfP->setSizeOfInnerTree(LeftSonOfP->calcNumOfSons()+1);
 
 

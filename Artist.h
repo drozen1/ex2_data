@@ -245,19 +245,16 @@ public:
 
     StatusType removeSong(int song_id,int num_of_streams);
 
-private:
-    AVL::AVL_tree<ArtistRegularTreeInfo> regular_tree;
 public:
      AVL::AVL_tree<ArtistRegularTreeInfo> &getRegularTree() ;
 
      AVL::AVL_tree<ArtistStreamTreeInfo> &getStreamTree();
 
 private:
+    AVL::AVL_tree<ArtistRegularTreeInfo> regular_tree;
     AVL::AVL_tree<ArtistStreamTreeInfo> stream_tree;
     AVL::AVL_tree_node<ArtistStreamTreeInfo>* most_streams_song;
-
 };
-
 StatusType Artist::addSong(int song_id) {
     ArtistRegularTreeInfo* regular_key= new ArtistRegularTreeInfo(song_id);
     if (regular_tree.find_node(regular_key)!=NULL){

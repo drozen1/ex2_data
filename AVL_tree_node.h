@@ -263,7 +263,6 @@ namespace AVL {
     template<class Element>
     int AVL_tree_node<Element>::calcNumOfSons() {
         int total_sons=0;
-
         if (this->getLeftSon()!=NULL){
             total_sons+=this->getLeftSon()->getNumOfSons();
         }

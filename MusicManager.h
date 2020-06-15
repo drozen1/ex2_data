@@ -57,6 +57,9 @@
 
 
 StatusType MusicManager::GetRecommendedSongInPlace(int rank, int *artistID, int *songID) {
+   if (this->main_songs_tree.getRoot() == NULL){
+       return FAILURE;
+   }
     int sizeOfTree = this->main_songs_tree.getRoot()->getSizeOfInnerTree();
     AVL::AVL_tree_node<MainTreeSongInfo>* wanted_song =  this->main_songs_tree.select(sizeOfTree-(rank-1));
     if(!wanted_song){
