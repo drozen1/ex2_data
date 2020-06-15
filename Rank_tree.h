@@ -610,6 +610,7 @@ namespace AVL {
             }
             delete (p);
             updateHeights(followingVerInorder);
+            followingVerInorder->update_size_of_inner_tree();
             return followingVerInorder;
         }
         AVL_tree_node <Element> *parentOfFollowingVer = followingVerInorder->getParent();
@@ -649,6 +650,7 @@ namespace AVL {
         }
         delete (p);
         updateHeights(parentOfFollowingVer); //this should reach to an update of the followingVerInorder too
+        parentOfFollowingVer->update_size_of_inner_tree();
         return followingVerInorder;
     }
 
@@ -673,6 +675,7 @@ namespace AVL {
         }
         delete (p);
         updateHeights(parentOfp);
+        parentOfp->update_size_of_inner_tree(); ///add 15/6
         return parentOfp;
     }
 
@@ -693,6 +696,7 @@ namespace AVL {
             }
             delete (p);
             updateHeights(root);
+            root->update_size_of_inner_tree();
             return root;
         }
         AVL_tree_node <Element> *parentOfp = p->getParent();
@@ -717,6 +721,7 @@ namespace AVL {
         }
         delete (p);
         updateHeights(parentOfp);
+        parentOfp->update_size_of_inner_tree();
         return nodeToReturn;
     }
 

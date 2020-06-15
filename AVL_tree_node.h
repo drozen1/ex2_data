@@ -285,6 +285,9 @@ namespace AVL {
 
     template<class Element>
     void AVL_tree_node<Element>::update_size_of_inner_tree() {
+        if (this==NULL){
+            return;
+        }
         AVL_tree_node<Element>* cur= this;
         while(cur!=NULL){
             int new_size=cur->calcNumOfSons();

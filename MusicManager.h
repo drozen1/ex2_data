@@ -158,11 +158,9 @@ StatusType MusicManager::AddArtist(int artistId) {
         MainTreeSongInfo dummy_main_key = MainTreeSongInfo(songID, artistID,old_num_of_streams);
       //  dummy_main_key.setNumOfStreams(old_num_of_streams); ////this was added 14/6
         AVL_tree_node<MainTreeSongInfo> *current_main_song = this->main_songs_tree.find_node(&dummy_main_key);
-        MainTreeSongInfo *copy_of_current_main_song = new MainTreeSongInfo(songID, artistID);
-        AVL_tree_node<MainTreeSongInfo> *incrementedCopyOf_main_Song = new AVL_tree_node<MainTreeSongInfo>(
-                copy_of_current_main_song);
-        incrementedCopyOf_main_Song->getDataKey()->setNumOfStreams(
-                new_numOfStream);
+        MainTreeSongInfo *copy_of_current_main_song = new MainTreeSongInfo(songID, artistID,new_numOfStream);
+        AVL_tree_node<MainTreeSongInfo> *incrementedCopyOf_main_Song = new AVL_tree_node<MainTreeSongInfo>(copy_of_current_main_song);
+        //incrementedCopyOf_main_Song->getDataKey()->setNumOfStreams(new_numOfStream);
         this->main_songs_tree.remove(*current_main_song);
         this->main_songs_tree.insert(*incrementedCopyOf_main_Song);
         return SUCCESS;
