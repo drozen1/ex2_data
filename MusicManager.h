@@ -76,6 +76,8 @@ StatusType MusicManager::GetRecommendedSongInPlace(int rank, int *artistID, int 
 StatusType MusicManager::AddArtist(int artistId) {
         return (this->array_of_artists.addToTable(artistId));
     }
+
+
     StatusType MusicManager::RemoveArtist(int artistID) {
         Link_Node<Artist> *NodeToRemove = this->array_of_artists.retrieve_member(artistID);
         if (NodeToRemove == NULL || NodeToRemove->getElement()->getMostStreamsSong() != NULL) {
